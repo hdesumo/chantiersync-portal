@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import Footer from "@/components/Footer";
+import Header from "../components/Header";
+import HeroSection from "../components/HeroSection";
+import Footer from "../components/Footer";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import ContactForm from "@/components/ContactForm";
+import { Button } from "../components/ui/button";
+import ContactForm from "../components/ContactForm";
 
 export default function HomePage() {
   return (
