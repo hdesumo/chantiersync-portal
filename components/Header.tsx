@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button"; // ✅ chemin relatif
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
