@@ -1,6 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Facebook, Linkedin, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-10 mt-12">
       <div className="max-w-6xl mx-auto px-4 md:px-6 grid md:grid-cols-3 gap-8">
@@ -41,7 +50,7 @@ export default function Footer() {
       </div>
 
       <div className="text-center text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-8">
-        © {new Date().getFullYear()} Apps 1 Global. Tous droits réservés.
+        © {year ?? "…"} Apps 1 Global. Tous droits réservés.
       </div>
     </footer>
   );
