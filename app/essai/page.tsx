@@ -3,13 +3,41 @@
 import { useState } from "react";
 import Link from "next/link";
 
-// Liste fictive d'emails qui ont déjà utilisé un essai gratuit
 const existingTrials = ["client@chantier.com", "demo@exemple.com"];
 
 export default function EssaiPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!nom.trim()) newErrors.nom = "Veuillez entrer votre nom complet.";
+    if (!email.trim()) {
+      newErrors.email = "Veuillez entrer votre email.";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Veuillez entrer un email valide.";
+    }
+    if (existingTrials.includes(email.trim().toLowerCase())) {
+      newErrors.email =
+        "Cette adresse email a déjà bénéficié d’un essai gratuit. Veuillez vous connecter à votre compte.";
+    }
+    if (telephone && !/^\+?[0-9]{6,15}$/.test(telephone)) {
+      newErrors.telephone = "Numéro de téléphone invalide (6-15 chiffres).";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setSubmitted(true);
+  };
 
   if (submitted) {
     return (
@@ -22,7 +50,6 @@ export default function EssaiPage() {
             Merci pour votre inscription ! Vous pouvez dès maintenant accéder à votre tableau de bord
             pour découvrir toutes les fonctionnalités de ChantierSync.
           </p>
-
           <a
             href="https://admin.chantiersync.com"
             target="_blank"
@@ -31,7 +58,6 @@ export default function EssaiPage() {
           >
             🚀 Accéder à mon tableau de bord
           </a>
-
           <Link href="/" className="block mt-4 text-sm text-blue-600 hover:underline">
             ← Retour à l’accueil
           </Link>
@@ -49,54 +75,33 @@ export default function EssaiPage() {
           des fonctionnalités de ChantierSync pendant 15 jours.
         </p>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            if (existingTrials.includes(email.trim().toLowerCase())) {
-              setError(
-                "Cette adresse email a déjà bénéficié d’un essai gratuit. Veuillez vous connecter à votre compte."
-              );
-              return;
-            }
-
-            setError(null);
-            setSubmitted(true);
-          }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 space-y-5"
-        >
-          {error && (
-            <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 p-3 rounded-lg">
-              {error}{" "}
-              <a
-                href="https://admin.chantiersync.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline font-semibold"
-              >
-                Se connecter
-              </a>
-            </div>
-          )}
-
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block mb-1 font-medium">Nom complet</label>
               <input
-                type="text"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
                 required
-                className="w-full rounded-lg border px-3 py-2 bg-white/90 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+                className={`w-full rounded-lg border px-3 py-2 ${
+                  errors.nom ? "border-red-500" : "border-gray-300 dark:border-gray-700"
+                } bg-white/90 dark:bg-gray-900`}
               />
+              {errors.nom && <p className="text-red-600 text-sm">{errors.nom}</p>}
             </div>
+
             <div>
               <label className="block mb-1 font-medium">Email</label>
               <input
                 type="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border px-3 py-2 bg-white/90 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+                required
+                className={`w-full rounded-lg border px-3 py-2 ${
+                  errors.email ? "border-red-500" : "border-gray-300 dark:border-gray-700"
+                } bg-white/90 dark:bg-gray-900`}
               />
+              {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
             </div>
           </div>
 
@@ -104,8 +109,13 @@ export default function EssaiPage() {
             <label className="block mb-1 font-medium">Téléphone</label>
             <input
               type="tel"
-              className="w-full rounded-lg border px-3 py-2 bg-white/90 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              className={`w-full rounded-lg border px-3 py-2 ${
+                errors.telephone ? "border-red-500" : "border-gray-300 dark:border-gray-700"
+              } bg-white/90 dark:bg-gray-900`}
             />
+            {errors.telephone && <p className="text-red-600 text-sm">{errors.telephone}</p>}
           </div>
 
           <div className="pt-2">
