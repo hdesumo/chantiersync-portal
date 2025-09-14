@@ -1,56 +1,81 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Facebook, Linkedin, Mail, Phone } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
-  const [year, setYear] = useState<number | null>(null);
-
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
-
   return (
-    <footer className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-10 mt-12">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 grid md:grid-cols-3 gap-8">
-        {/* Colonne 1 */}
+    <footer className="bg-gray-900 text-gray-300 py-10 px-6 mt-12">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+        {/* Colonne 1 : Logo et slogan */}
         <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-            ChantierSync
-          </h3>
+          <h3 className="text-2xl font-bold text-white mb-2">ChantierSync</h3>
           <p className="text-sm">
-            Suivez et contrôlez vos chantiers à distance, en toute tranquillité !
+            Digitalisez vos chantiers et suivez vos projets en toute confiance,
+            où que vous soyez.
           </p>
         </div>
 
-        {/* Colonne 2 */}
+        {/* Colonne 2 : Navigation rapide */}
         <div>
-          <h4 className="text-md font-semibold mb-3">Liens utiles</h4>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#features" className="hover:underline">Fonctionnalités</a></li>
-            <li><a href="#pricing" className="hover:underline">Tarifs</a></li>
-            <li><a href="#contact" className="hover:underline">Contact</a></li>
+          <h4 className="text-lg font-semibold text-white mb-3">
+            Navigation
+          </h4>
+          <ul className="space-y-2">
+            <li>
+              <Link href="/" className="hover:text-white">
+                Accueil
+              </Link>
+            </li>
+            <li>
+              <Link href="#features" className="hover:text-white">
+                Fonctionnalités
+              </Link>
+            </li>
+            <li>
+              <Link href="#pricing" className="hover:text-white">
+                Tarifs
+              </Link>
+            </li>
+            <li>
+              <Link href="#affiliation" className="hover:text-white">
+                Programme d’affiliation
+              </Link>
+            </li>
+            <li>
+              <Link href="#contact" className="hover:text-white">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
 
-        {/* Colonne 3 */}
+        {/* Colonne 3 : Contact */}
         <div>
-          <h4 className="text-md font-semibold mb-3">Contact</h4>
-          <p className="flex items-center gap-2 text-sm">
-            <Mail size={16}/> contact@chantiersync.com
-          </p>
-          <p className="flex items-center gap-2 text-sm">
-            <Phone size={16}/> +221 77 481 98 00 (Whatsapp)
-          </p>
-          <div className="flex gap-4 mt-4">
-            <a href="#" aria-label="Facebook"><Facebook size={18}/></a>
-            <a href="#" aria-label="LinkedIn"><Linkedin size={18}/></a>
-          </div>
+          <h4 className="text-lg font-semibold text-white mb-3">
+            Contact
+          </h4>
+          <ul className="space-y-2">
+            <li>
+              <a
+                href="mailto:contact@chantiersync.com"
+                className="hover:text-white"
+              >
+                contact@chantiersync.com
+              </a>
+            </li>
+            <li>
+              <a
+                href="mailto:partenaires@chantiersync.com"
+                className="hover:text-white"
+              >
+                partenaires@chantiersync.com
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div className="text-center text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-8">
-        © {year ?? "…"} Apps 1 Global. Tous droits réservés.
+      {/* Copyright */}
+      <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-400">
+        © {new Date().getFullYear()} ChantierSync. Tous droits réservés.
       </div>
     </footer>
   );
