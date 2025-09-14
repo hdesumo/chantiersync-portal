@@ -1,70 +1,41 @@
-"use client";
-
-import React, { useState } from "react";
-import axios from "axios";
-import ReCAPTCHA from "react-google-recaptcha";
-import { Button } from "../../components/ui/button";
+export const metadata = {
+  title: "Contact – ChantierSync",
+  description: "Coordonnées et contact de la plateforme",
+};
 
 export default function ContactPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!captchaValue) {
-      alert("Veuillez valider le reCAPTCHA avant d’envoyer.");
-      return;
-    }
-
-    try {
-      await axios.post("/api/contact", { name, email, message, captchaValue });
-      alert("Votre message a été envoyé avec succès !");
-      setName("");
-      setEmail("");
-      setMessage("");
-      setCaptchaValue(null);
-    } catch (error) {
-      alert("Erreur lors de l’envoi du message. Veuillez réessayer.");
-    }
-  };
-
   return (
-    <section className="max-w-2xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6">Contactez-nous</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <input
-          type="text"
-          placeholder="Votre nom"
-          className="w-full border rounded-lg p-3"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Votre email"
-          className="w-full border rounded-lg p-3"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Votre message"
-          className="w-full border rounded-lg p-3"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={5}
-          required
-        ></textarea>
-        <ReCAPTCHA
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-          onChange={setCaptchaValue}
-        />
-        <Button type="submit">Envoyer</Button>
-      </form>
-    </section>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-14 px-6">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6">Contact</h1>
+
+        <div className="rounded-2xl bg-white dark:bg-gray-800 shadow p-6 space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Adresse</h2>
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong>Apps 1 Global</strong><br />
+              Jaxxay, Extension 23, Villa 243<br />
+              Région de Dakar (Sénégal)
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Téléphone & Email</h2>
+            <p className="text-gray-700 dark:text-gray-300">
+              Téléphone : <span className="font-medium">(+221) 78 481 98 00</span><br />
+              Email : <a className="text-blue-500 hover:underline" href="mailto:contact@chantiersync.com">contact@chantiersync.com</a>
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Support</h2>
+            <p className="text-gray-700 dark:text-gray-300">
+              Pour toute demande de support, écrivez-nous :{" "}
+              <a className="text-blue-500 hover:underline" href="mailto:support@chantiersync.com">support@chantiersync.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

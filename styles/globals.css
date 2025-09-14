@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Styles globaux personnalisés si besoin */
+/* Police par défaut */
 body {
-  font-family: Inter, system-ui, Arial, sans-serif;
+  @apply bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100;
 }

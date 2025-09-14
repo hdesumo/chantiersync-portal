@@ -1,154 +1,122 @@
-"use client";
-
-import React from "react";
 import Link from "next/link";
-import Header from "../components/Header";
-import HeroSection from "../components/HeroSection";
-import Footer from "../components/Footer";
 import Image from "next/image";
-import ContactForm from "../components/ContactForm";
+import HeroSection from "@/components/HeroSection";
 
 export default function HomePage() {
-  const buttonClasses =
-    "inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-blue-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400";
-
-  const outlineButtonClasses =
-    "inline-flex items-center justify-center rounded-md border border-gray-300 bg-transparent px-5 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400";
+  const primary =
+    "inline-flex items-center justify-center rounded-2xl bg-blue-600 px-6 py-3 text-lg font-semibold text-white hover:bg-blue-500";
+  const outline =
+    "inline-flex items-center justify-center rounded-2xl border border-gray-300 px-6 py-3 text-lg font-semibold text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800";
 
   return (
     <>
-      {/* HEADER */}
-      <Header />
+      {/* 1) HERO (image #1) */}
+      <HeroSection />
 
-      {/* HERO */}
-      <section id="hero">
-        <HeroSection />
-      </section>
-
-      {/* SECTION ÉQUIPE */}
-      <section
-        id="features"
-        className="bg-gray-900 text-white py-12 md:py-16 px-4 md:px-6 grid md:grid-cols-2 items-center gap-8"
-      >
-        <Image
-          src="/chantier_team.jpeg"
-          alt="Equipe de chantier"
-          width={600}
-          height={400}
-          className="rounded-2xl shadow-xl mx-auto"
-        />
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-            Collaborez en temps réel
-          </h2>
-          <p className="mb-6 text-gray-300 leading-relaxed">
-            Vos équipes sur le terrain et au bureau restent connectées en temps
-            réel. Recevez les rapports d’avancement instantanément, améliorez la
-            communication et anticipez les imprévus.
-          </p>
-          <Link href="#dashboard" className={buttonClasses}>
-            Découvrir le tableau de bord
-          </Link>
-        </div>
-      </section>
-
-      {/* SECTION SUPERVISION */}
-      <section className="bg-gray-800 text-white py-12 md:py-16 px-4 md:px-6 grid md:grid-cols-2 items-center gap-8">
-        <Image
-          src="/agent_chantier.jpeg"
-          alt="Supervision de chantier à distance"
-          width={600}
-          height={400}
-          className="rounded-2xl shadow-xl mx-auto"
-        />
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-            Suivez votre projet depuis l’étranger
-          </h2>
-          <p className="mb-6 text-gray-300 leading-relaxed">
-            Vous financez un projet de construction en Afrique depuis la
-            diaspora ? Avec ChantierSync, vous recevez des rapports fiables,
-            illustrés de photos, vidéos et commentaires en temps réel.
-          </p>
-          <Link href="#demo" className={buttonClasses}>
-            Commencez dès aujourd'hui
-          </Link>
-        </div>
-      </section>
-
-      {/* SECTION PORTRAIT */}
-      <section className="bg-gray-900 text-white py-12 md:py-16 px-4 md:px-6 grid md:grid-cols-2 items-center gap-8">
-        <Image
-          src="/agent_1chantier.jpg"
-          alt="Ouvrier sur le chantier"
-          width={600}
-          height={400}
-          className="rounded-2xl shadow-xl mx-auto"
-        />
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-            Mettez vos équipes en confiance
-          </h2>
-          <p className="mb-6 text-gray-300 leading-relaxed">
-            Donnez à vos ouvriers et chefs de chantier les bons outils pour
-            communiquer avec vous efficacement, même à distance.
-          </p>
-          <Link href="#features" className={outlineButtonClasses}>
-            Découvrir les fonctionnalités
-          </Link>
-        </div>
-      </section>
-
-      {/* SECTION PRICING */}
-      <section
-        id="pricing"
-        className="bg-gray-100 dark:bg-gray-800 py-16 px-4 text-center"
-      >
-        <h2 className="text-3xl font-bold mb-4">Nos Tarifs</h2>
-        <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
-          Plans flexibles adaptés à vos besoins. (Section à compléter avec les
-          offres et prix)
-        </p>
-      </section>
-
-      {/* SECTION DEMO */}
-      <section
-        id="demo"
-        className="bg-blue-50 dark:bg-blue-900 py-16 px-4 text-center"
-      >
-        <h2 className="text-3xl font-bold mb-4">Demander une démo</h2>
-        <p className="text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-6">
-          Remplissez le formulaire ci-dessous pour planifier une démonstration
-          personnalisée.
-        </p>
-        <Link href="mailto:demo@chantiersync.com" className={buttonClasses}>
-          Envoyer une demande
-        </Link>
-      </section>
-
-      {/* SECTION AFFILIATION */}
-      <section
-        id="affiliation"
-        className="bg-gray-100 dark:bg-gray-800 py-16 px-4 text-center"
-      >
-        <h2 className="text-3xl font-bold mb-4">Programme d’affiliation</h2>
+      {/* 2) Découvrir le tableau de bord (juste après le hero) */}
+      <section className="bg-gray-100 dark:bg-gray-800 py-16 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          Découvrez votre futur tableau de bord
+        </h2>
         <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-6">
-          Devenez partenaire de ChantierSync et gagnez des récompenses en
-          recommandant notre solution à vos collègues et clients. Ensemble,
-          digitalisons les chantiers en Afrique !
+          KPIs, rapports, alertes et graphiques en temps réel pour piloter vos
+          chantiers en toute sérénité.
         </p>
-        <Link href="mailto:partenaires@chantiersync.com" className={buttonClasses}>
-          Rejoindre le programme
+        <Link href="/dashboard" className={primary}>
+          Découvrir le tableau de bord
         </Link>
       </section>
 
-      {/* SECTION CONTACT */}
-      <section id="contact">
-        <ContactForm />
+      {/* 3) Section visuelle #2 : Collaborez en temps réel (image à gauche) */}
+      <section className="bg-white dark:bg-gray-900 py-16 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div className="relative h-72 md:h-80">
+            <Image
+              src="/chantier_team.jpeg"
+              alt="Équipe chantier connectée"
+              fill
+              className="object-cover rounded-2xl shadow-xl"
+            />
+          </div>
+          <div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Collaborez en temps réel
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Reliez terrain et bureau : rapports photo/vidéo datés,
+              commentaires, check-lists et notifications pour éviter les
+              imprévus.
+            </p>
+            <Link href="/fonctionnalites" className={outline}>
+              Voir comment ça marche
+            </Link>
+          </div>
+        </div>
       </section>
 
-      {/* FOOTER */}
-      <Footer />
+      {/* 4) TARIFS (CTA vers la page tarifs) */}
+      <section className="bg-gray-50 dark:bg-gray-800 py-16 text-center px-6">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Des tarifs adaptés</h2>
+        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
+          Choisissez la formule qui vous convient. Tarifs en EUR avec sélecteur
+          multi-devises (USD, XOF, XAF) sur la page dédiée.
+        </p>
+        <Link href="/tarifs" className={primary}>
+          Voir les tarifs
+        </Link>
+      </section>
+
+      {/* 5) Section visuelle #3 : Supervisez depuis l’étranger (image à gauche) */}
+      <section className="bg-white dark:bg-gray-900 py-16 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div className="relative h-72 md:h-80">
+            <Image
+              src="/agent_chantier.jpeg"
+              alt="Supervision de chantier à distance"
+              fill
+              className="object-cover rounded-2xl shadow-xl"
+            />
+          </div>
+          <div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Supervisez vos projets depuis l’étranger
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Pensé pour la diaspora : suivez la progression, recevez les
+              rapports et partagez une vue d’ensemble avec vos proches.
+            </p>
+            <Link href="/essai" className={outline}>
+              15 jours d&apos;essai gratuit
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 6) Section visuelle #4 : Mettez vos équipes en confiance (image à gauche) */}
+      <section className="bg-white dark:bg-gray-900 py-16 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div className="relative h-72 md:h-80">
+            <Image
+              src="/agent_1chantier.jpg"
+              alt="Ouvriers confiants et outillés"
+              fill
+              className="object-cover rounded-2xl shadow-xl"
+            />
+          </div>
+          <div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Mettez vos équipes en confiance
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Donnez aux chefs de chantier des outils simples pour remonter des
+              preuves et débloquer rapidement les décisions.
+            </p>
+            <Link href="/affiliation" className={outline}>
+              Devenir partenaire / affilié
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

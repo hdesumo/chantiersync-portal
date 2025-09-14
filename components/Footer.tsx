@@ -19,31 +19,12 @@ export default function Footer() {
             Navigation
           </h4>
           <ul className="space-y-2">
-            <li>
-              <Link href="/" className="hover:text-white">
-                Accueil
-              </Link>
-            </li>
-            <li>
-              <Link href="#features" className="hover:text-white">
-                Fonctionnalités
-              </Link>
-            </li>
-            <li>
-              <Link href="#pricing" className="hover:text-white">
-                Tarifs
-              </Link>
-            </li>
-            <li>
-              <Link href="#affiliation" className="hover:text-white">
-                Programme d’affiliation
-              </Link>
-            </li>
-            <li>
-              <Link href="#contact" className="hover:text-white">
-                Contact
-              </Link>
-            </li>
+            <li><Link href="/" className="hover:text-white">Accueil</Link></li>
+            <li><Link href="/fonctionnalites" className="hover:text-white">Fonctionnalités</Link></li>
+            <li><Link href="/tarifs" className="hover:text-white">Tarifs</Link></li>
+            <li><Link href="/affiliation" className="hover:text-white">Programme d’affiliation</Link></li>
+            <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
+            <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
           </ul>
         </div>
 
@@ -54,18 +35,12 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2">
             <li>
-              <a
-                href="mailto:contact@chantiersync.com"
-                className="hover:text-white"
-              >
+              <a href="mailto:contact@chantiersync.com" className="hover:text-white">
                 contact@chantiersync.com
               </a>
             </li>
             <li>
-              <a
-                href="mailto:partenaires@chantiersync.com"
-                className="hover:text-white"
-              >
+              <a href="mailto:partenaires@chantiersync.com" className="hover:text-white">
                 partenaires@chantiersync.com
               </a>
             </li>
@@ -75,7 +50,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-400">
-        © {new Date().getFullYear()} ChantierSync. Tous droits réservés.
+        © <span suppressHydrationWarning>{new Date().getFullYear()}</span> ChantierSync. Tous droits réservés.
       </div>
     </footer>
   );

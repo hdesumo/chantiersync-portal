@@ -1,1 +1,10 @@
-export default function Dashboard(){ return (<main style={{padding:24}}><h2>Dashboard</h2><p>Bienvenue.</p></main>); }
+import DashboardContent from "@/components/DashboardContent";
+
+export const metadata = {
+  title: "Aperçu du Tableau de Bord – ChantierSync",
+  description: "Découvrez les graphiques, tableaux et indicateurs que vous trouverez sur votre tableau de bord ChantierSync.",
+};
+
+export default function DashboardPage() {
+  return <DashboardContent />;
+}
