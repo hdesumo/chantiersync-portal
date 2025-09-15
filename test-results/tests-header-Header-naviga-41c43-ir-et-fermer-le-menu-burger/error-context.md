@@ -1,0 +1,117 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "ChantierSync ChantierSync" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "ChantierSync" [ref=e5] [cursor=pointer]
+        - generic [ref=e6] [cursor=pointer]: ChantierSync
+      - button "Menu" [active] [ref=e7] [cursor=pointer]: ☰
+    - generic [ref=e8]:
+      - button "Fermer" [ref=e10] [cursor=pointer]:
+        - img [ref=e11] [cursor=pointer]
+      - navigation [ref=e14]:
+        - link "Accueil" [ref=e15] [cursor=pointer]:
+          - /url: /
+        - link "Fonctionnalités" [ref=e16] [cursor=pointer]:
+          - /url: /fonctionnalites
+        - link "Tarifs" [ref=e17] [cursor=pointer]:
+          - /url: /tarifs
+        - link "Affiliation" [ref=e18] [cursor=pointer]:
+          - /url: /affiliation
+        - link "FAQ" [ref=e19] [cursor=pointer]:
+          - /url: /faq
+        - link "15 jours d’essai gratuit" [ref=e20] [cursor=pointer]:
+          - /url: /essai
+        - link "Connexion" [ref=e21] [cursor=pointer]:
+          - /url: /connexion
+        - button "Mode sombre" [ref=e22] [cursor=pointer]:
+          - img [ref=e23] [cursor=pointer]
+          - text: Mode sombre
+  - main [ref=e25]:
+    - generic [ref=e27]:
+      - img "Illustration ChantierSync" [ref=e29]
+      - generic [ref=e30]:
+        - heading "Digitalisez vos chantiers dès aujourd'hui" [level=1] [ref=e31]
+        - paragraph [ref=e32]: Suivez vos projets, coordonnez vos équipes et recevez des rapports fiables en temps réel, où que vous soyez.
+        - generic [ref=e33]:
+          - link "Découvrir les fonctionnalités" [ref=e34] [cursor=pointer]:
+            - /url: /fonctionnalites
+          - link "15 jours d’essai gratuit" [ref=e35] [cursor=pointer]:
+            - /url: /essai
+    - generic [ref=e36]:
+      - heading "Découvrez votre futur tableau de bord" [level=2] [ref=e37]
+      - paragraph [ref=e38]: KPIs, rapports, alertes et graphiques en temps réel pour piloter vos chantiers en toute sérénité.
+      - link "Découvrir le tableau de bord" [ref=e39] [cursor=pointer]:
+        - /url: /dashboard
+    - generic [ref=e41]:
+      - img "Équipe chantier connectée" [ref=e43]
+      - generic [ref=e44]:
+        - heading "Collaborez en temps réel" [level=3] [ref=e45]
+        - paragraph [ref=e46]: "Reliez terrain et bureau : rapports photo/vidéo datés, commentaires, check-lists et notifications pour éviter les imprévus."
+        - link "Voir comment ça marche" [ref=e47] [cursor=pointer]:
+          - /url: /fonctionnalites
+    - generic [ref=e48]:
+      - heading "Des tarifs adaptés" [level=2] [ref=e49]
+      - paragraph [ref=e50]: Choisissez la formule qui vous convient. Tarifs en EUR avec sélecteur multi-devises (USD, XOF, XAF) sur la page dédiée.
+      - link "Voir les tarifs" [ref=e51] [cursor=pointer]:
+        - /url: /tarifs
+    - generic [ref=e53]:
+      - img "Supervision de chantier à distance" [ref=e55]
+      - generic [ref=e56]:
+        - heading "Supervisez vos projets depuis l’étranger" [level=3] [ref=e57]
+        - paragraph [ref=e58]: "Pensé pour la diaspora : suivez la progression, recevez les rapports et partagez une vue d’ensemble avec vos proches."
+        - link "15 jours d'essai gratuit" [ref=e59] [cursor=pointer]:
+          - /url: /essai
+    - generic [ref=e61]:
+      - img "Ouvriers confiants et outillés" [ref=e63]
+      - generic [ref=e64]:
+        - heading "Mettez vos équipes en confiance" [level=3] [ref=e65]
+        - paragraph [ref=e66]: Donnez aux chefs de chantier des outils simples pour remonter des preuves et débloquer rapidement les décisions.
+        - link "Devenir partenaire / affilié" [ref=e67] [cursor=pointer]:
+          - /url: /affiliation
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - heading "ChantierSync" [level=3] [ref=e71]
+        - paragraph [ref=e72]: Digitalisez vos chantiers et suivez vos projets en toute confiance, où que vous soyez.
+      - generic [ref=e73]:
+        - heading "Navigation" [level=4] [ref=e74]
+        - list [ref=e75]:
+          - listitem [ref=e76]:
+            - link "Accueil" [ref=e77] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e78]:
+            - link "Fonctionnalités" [ref=e79] [cursor=pointer]:
+              - /url: /fonctionnalites
+          - listitem [ref=e80]:
+            - link "Tarifs" [ref=e81] [cursor=pointer]:
+              - /url: /tarifs
+          - listitem [ref=e82]:
+            - link "Programme d’affiliation" [ref=e83] [cursor=pointer]:
+              - /url: /affiliation
+          - listitem [ref=e84]:
+            - link "FAQ" [ref=e85] [cursor=pointer]:
+              - /url: /faq
+          - listitem [ref=e86]:
+            - link "Contact" [ref=e87] [cursor=pointer]:
+              - /url: /contact
+      - generic [ref=e88]:
+        - heading "Contact" [level=4] [ref=e89]
+        - list [ref=e90]:
+          - listitem [ref=e91]:
+            - link "contact@chantiersync.com" [ref=e92] [cursor=pointer]:
+              - /url: mailto:contact@chantiersync.com
+          - listitem [ref=e93]:
+            - link "partenaires@chantiersync.com" [ref=e94] [cursor=pointer]:
+              - /url: mailto:partenaires@chantiersync.com
+    - generic [ref=e95]:
+      - text: ©
+      - generic [ref=e96]: "2025"
+      - text: ChantierSync. Tous droits réservés.
+  - button "Open Next.js Dev Tools" [ref=e102] [cursor=pointer]:
+    - img [ref=e103] [cursor=pointer]
+  - alert [ref=e106]
+```
