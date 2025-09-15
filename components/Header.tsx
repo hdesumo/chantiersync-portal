@@ -152,8 +152,8 @@ export default function Header() {
                   <Image
                     src="/logo.png"
                     alt="Logo"
-                    width={64}
-                    height={64}
+                    width={120}
+                    height={120}
                     priority
                     className="rounded object-contain"
                   />
