@@ -27,7 +27,7 @@ export default function TrialForm() {
 
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/trials`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/trials`, // ✅ endpoint correct
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -35,7 +35,7 @@ export default function TrialForm() {
       if (res.status === 201 || res.status === 200) {
         setSuccess(true);
 
-        // ✅ Redirection flash success
+        // ✅ Redirection flash success après un court délai
         setTimeout(() => {
           router.push("/?flash=success");
         }, 1000);
