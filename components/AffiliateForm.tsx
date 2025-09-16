@@ -42,6 +42,8 @@ export default function AffiliateForm() {
         });
         setFormData({ name: "", email: "", company: "", phone: "" });
       } else {
+        const errorData = await res.json().catch(() => ({}));
+        console.error("Erreur backend :", errorData);
         setFlash({
           type: "error",
           message: "Une erreur est survenue lors de l'envoi de votre demande.",
