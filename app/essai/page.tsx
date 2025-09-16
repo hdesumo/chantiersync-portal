@@ -11,17 +11,46 @@ export default function EssaiPage() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.nom.trim()) {
+      newErrors.nom = "Le nom est requis.";
+    }
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      newErrors.email = "L'email n'est pas valide.";
+    }
+    if (!formData.entreprise.trim()) {
+      newErrors.entreprise = "Le nom de l'entreprise est requis.";
+    }
+    if (!formData.telephone.match(/^[0-9]{6,15}$/)) {
+      newErrors.telephone =
+        "Le téléphone doit contenir uniquement des chiffres (6 à 15).";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage("");
+
+    if (!validate()) {
+      return;
+    }
+
     setLoading(true);
-    setError(null);
 
     try {
       const res = await fetch(
@@ -29,124 +58,110 @@ export default function EssaiPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contactName: formData.nom,
-            email: formData.email,
-            companyName: formData.entreprise,
-            phone: formData.telephone,
-          }),
+          body: JSON.stringify(formData),
         }
       );
 
-      const data = await res.json();
-
       if (res.ok) {
-        setSubmitted(true);
+        setMessage(
+          "✅ Votre demande a bien été prise en compte. Vous serez contacté rapidement."
+        );
+        setFormData({ nom: "", email: "", entreprise: "", telephone: "" });
+        setErrors({});
       } else if (res.status === 409) {
-        setError("⚠️ Une demande existe déjà pour cet email.");
+        setMessage("⚠️ Une demande existe déjà avec cet email.");
       } else {
-        setError(data.message || "❌ Une erreur est survenue.");
+        setMessage("❌ Une erreur est survenue. Merci de réessayer.");
       }
-    } catch (err) {
-      console.error("Erreur requête :", err);
-      setError("Impossible de contacter le serveur.");
+    } catch (error) {
+      console.error(error);
+      setMessage("❌ Impossible d’envoyer votre demande.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="max-w-2xl mx-auto py-12 px-4 text-center">
-        <h1 className="text-3xl font-bold mb-6">
-          🎉 Merci pour votre demande !
-        </h1>
-        <p className="text-lg text-gray-700 mb-6">
-          Votre inscription à l’essai gratuit de 15 jours a bien été enregistrée.
-          <br />
-          Notre équipe vous contactera sous peu ✅
-        </p>
-        <a
-          href="/"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
-        >
-          Retour à l’accueil
-        </a>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
+    <div className="max-w-lg mx-auto py-12 px-6">
       <h1 className="text-3xl font-bold mb-6 text-center">
-        🎁 Essai gratuit 15 jours
+        🚀 Essai gratuit 15 jours
       </h1>
-      <p className="text-center text-gray-600 mb-8">
-        Remplissez le formulaire ci-dessous. Vous serez recontacté rapidement.
-      </p>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-6 rounded-lg shadow"
+      >
         <div>
-          <label className="block font-medium">Nom complet</label>
+          <label className="block mb-1 font-medium">Nom complet</label>
           <input
             type="text"
             name="nom"
             value={formData.nom}
             onChange={handleChange}
             required
-            className="w-full border rounded-lg p-2"
+            className="w-full border rounded px-3 py-2"
           />
+          {errors.nom && (
+            <p className="text-red-600 text-sm">{errors.nom}</p>
+          )}
         </div>
 
         <div>
-          <label className="block font-medium">Email</label>
+          <label className="block mb-1 font-medium">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full border rounded-lg p-2"
+            className="w-full border rounded px-3 py-2"
           />
+          {errors.email && (
+            <p className="text-red-600 text-sm">{errors.email}</p>
+          )}
         </div>
 
         <div>
-          <label className="block font-medium">Entreprise</label>
+          <label className="block mb-1 font-medium">Entreprise</label>
           <input
             type="text"
             name="entreprise"
             value={formData.entreprise}
             onChange={handleChange}
             required
-            className="w-full border rounded-lg p-2"
+            className="w-full border rounded px-3 py-2"
           />
+          {errors.entreprise && (
+            <p className="text-red-600 text-sm">{errors.entreprise}</p>
+          )}
         </div>
 
         <div>
-          <label className="block font-medium">Téléphone</label>
+          <label className="block mb-1 font-medium">Téléphone</label>
           <input
-            type="text"
+            type="tel"
             name="telephone"
             value={formData.telephone}
             onChange={handleChange}
-            className="w-full border rounded-lg p-2"
+            required
+            className="w-full border rounded px-3 py-2"
           />
+          {errors.telephone && (
+            <p className="text-red-600 text-sm">{errors.telephone}</p>
+          )}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? "Envoi en cours..." : "Demander mon essai gratuit"}
+          {loading ? "Envoi en cours..." : "Demander un essai"}
         </button>
       </form>
+
+      {message && (
+        <p className="mt-4 text-center text-sm text-gray-700">{message}</p>
+      )}
     </div>
   );
 }
