@@ -1,107 +1,105 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function EssaiPage() {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    phone: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!fullName || !email || !company || !phone) {
-      alert("Tous les champs sont requis.");
-      return;
-    }
-
     setLoading(true);
+    setSuccess(false);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/tenant-requests`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fullName, email, company, phone }),
-        }
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/trials`, // ✅ corrigé ici
+        formData,
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.ok) {
-        // ✅ redirection vers la page confirmation
-        router.push("/confirmation");
-      } else {
-        alert("Une erreur est survenue lors de l'envoi de la demande.");
+      if (res.status === 201 || res.status === 200) {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push("/?flash=success");
+        }, 1000);
       }
-    } catch (error) {
-      console.error("Erreur lors de l'envoi :", error);
-      alert("Impossible d'envoyer la demande. Vérifiez votre connexion.");
+    } catch (err) {
+      console.error(err);
+      router.push("/?flash=error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 px-4">
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200">
-          🎁 Essai gratuit 15 jours
-        </h1>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-xl font-bold mb-4">Demande d’essai gratuit</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Nom complet"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full p-2 mb-3 border rounded"
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300">Nom complet</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-            />
-          </div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Adresse email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full p-2 mb-3 border rounded"
+        />
 
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-            />
-          </div>
+        <input
+          type="text"
+          name="company"
+          placeholder="Société (optionnel)"
+          value={formData.company}
+          onChange={handleChange}
+          className="w-full p-2 mb-3 border rounded"
+        />
 
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300">Entreprise</label>
-            <input
-              type="text"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-            />
-          </div>
+        <input
+          type="text"
+          name="phone"
+          placeholder="Téléphone (optionnel)"
+          value={formData.phone}
+          onChange={handleChange}
+          className="w-full p-2 mb-3 border rounded"
+        />
 
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300">Téléphone</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? "Envoi en cours..." : "Demander un essai"}
-          </button>
-        </form>
-      </div>
+        <button
+          type="submit"
+          disabled={loading || success}
+          className={`w-full flex items-center justify-center py-2 rounded text-white font-medium transition-colors duration-300
+            ${success ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700 disabled:opacity-50"}
+          `}
+        >
+          {loading && !success && "Envoi en cours..."}
+          {success && "Envoyé !"}
+          {!loading && !success && "Demander un essai"}
+        </button>
+      </form>
     </div>
   );
 }
