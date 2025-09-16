@@ -1,8 +1,29 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+  const flash = searchParams.get("flash");
+
+  const [showFlash, setShowFlash] = useState(false);
+
+  useEffect(() => {
+    if (flash === "success") {
+      setShowFlash(true);
+
+      const timer = setTimeout(() => {
+        setShowFlash(false);
+      }, 5000); // disparaît après 5s
+
+      return () => clearTimeout(timer);
+    }
+  }, [flash]);
+
   const primary =
     "inline-flex items-center justify-center rounded-2xl bg-blue-600 px-6 py-3 text-lg font-semibold text-white hover:bg-blue-500";
   const outline =
@@ -10,6 +31,13 @@ export default function HomePage() {
 
   return (
     <>
+      {/* ✅ Flash message (auto-disparition après 5s) */}
+      {showFlash && (
+        <div className="bg-green-100 text-green-700 px-6 py-3 text-center font-medium transition-opacity duration-500">
+          ✅ Merci ! Votre demande d’essai a bien été envoyée.
+        </div>
+      )}
+
       {/* 1) HERO (image #1) */}
       <HeroSection />
 
@@ -27,7 +55,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 3) Section visuelle #2 : Collaborez en temps réel (image à gauche) */}
+      {/* 3) Section visuelle #2 : Collaborez en temps réel */}
       <section className="bg-white dark:bg-gray-900 py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div className="relative h-72 md:h-80">
@@ -54,7 +82,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4) TARIFS (CTA vers la page tarifs) */}
+      {/* 4) TARIFS */}
       <section className="bg-gray-50 dark:bg-gray-800 py-16 text-center px-6">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Des tarifs adaptés</h2>
         <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
@@ -66,7 +94,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 5) Section visuelle #3 : Supervisez depuis l’étranger (image à gauche) */}
+      {/* 5) Section visuelle #3 */}
       <section className="bg-white dark:bg-gray-900 py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div className="relative h-72 md:h-80">
@@ -92,7 +120,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6) Section visuelle #4 : Mettez vos équipes en confiance (image à gauche) */}
+      {/* 6) Section visuelle #4 */}
       <section className="bg-white dark:bg-gray-900 py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div className="relative h-72 md:h-80">
