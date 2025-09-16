@@ -14,7 +14,6 @@ export default function TrialForm() {
     phone: ""
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +23,6 @@ export default function TrialForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     setSuccess(false);
 
     try {
@@ -37,14 +35,16 @@ export default function TrialForm() {
       if (res.status === 201 || res.status === 200) {
         setSuccess(true);
 
-        // Redirection après un court délai (1s) pour montrer le bouton vert
+        // ✅ Redirection flash success
         setTimeout(() => {
           router.push("/?flash=success");
         }, 1000);
       }
     } catch (err) {
       console.error(err);
-      setError("❌ Une erreur est survenue. Merci de réessayer.");
+
+      // ❌ Redirection flash error
+      router.push("/?flash=error");
     } finally {
       setLoading(false);
     }
@@ -146,10 +146,6 @@ export default function TrialForm() {
 
         {!loading && !success && "Demander un essai"}
       </button>
-
-      {error && (
-        <p className="mt-4 text-center font-medium text-red-600">{error}</p>
-      )}
     </form>
   );
 }
