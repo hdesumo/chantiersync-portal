@@ -1,39 +1,21 @@
+// components/AffiliateFlashMessage.tsx
 "use client";
-
-import { useEffect, useState } from "react";
 
 interface AffiliateFlashMessageProps {
   type: "success" | "error";
+  message: string; // 👈 ajouté
 }
 
-export default function AffiliateFlashMessage({ type }: AffiliateFlashMessageProps) {
-  const [showFlash, setShowFlash] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowFlash(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!showFlash) return null;
-
-  let style = "bg-gray-100 text-gray-700";
-  let content = "";
-
-  switch (type) {
-    case "success":
-      style = "bg-green-100 text-green-700";
-      content =
-        "✅ Votre inscription au programme d’affiliation a bien été prise en compte. Vous recevrez vos identifiants d’accès de la part de l’administrateur.";
-      break;
-    case "error":
-      style = "bg-red-100 text-red-700";
-      content = "❌ Une erreur est survenue lors de l’envoi de votre demande.";
-      break;
-  }
-
+export default function AffiliateFlashMessage({ type, message }: AffiliateFlashMessageProps) {
   return (
-    <div className={`${style} px-6 py-3 text-center font-medium transition-opacity duration-500`}>
-      {content}
+    <div
+      className={`p-4 rounded-md text-sm mb-4 ${
+        type === "success"
+          ? "bg-green-100 text-green-700 border border-green-300"
+          : "bg-red-100 text-red-700 border border-red-300"
+      }`}
+    >
+      {type === "success" ? "✅" : "❌"} {message}
     </div>
   );
 }
