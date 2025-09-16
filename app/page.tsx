@@ -1,29 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import FlashMessage from "@/components/FlashMessage";
 
 export default function HomePage() {
-  const searchParams = useSearchParams();
-  const flash = searchParams.get("flash");
-
-  const [showFlash, setShowFlash] = useState(false);
-
-  useEffect(() => {
-    if (flash === "success") {
-      setShowFlash(true);
-
-      const timer = setTimeout(() => {
-        setShowFlash(false);
-      }, 5000); // disparaît après 5s
-
-      return () => clearTimeout(timer);
-    }
-  }, [flash]);
-
   const primary =
     "inline-flex items-center justify-center rounded-2xl bg-blue-600 px-6 py-3 text-lg font-semibold text-white hover:bg-blue-500";
   const outline =
@@ -31,17 +14,15 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ✅ Flash message (auto-disparition après 5s) */}
-      {showFlash && (
-        <div className="bg-green-100 text-green-700 px-6 py-3 text-center font-medium transition-opacity duration-500">
-          ✅ Merci ! Votre demande d’essai a bien été envoyée.
-        </div>
-      )}
+      {/* ✅ FlashMessage encapsulé dans Suspense */}
+      <Suspense fallback={null}>
+        <FlashMessage />
+      </Suspense>
 
-      {/* 1) HERO (image #1) */}
+      {/* 1) HERO */}
       <HeroSection />
 
-      {/* 2) Découvrir le tableau de bord (juste après le hero) */}
+      {/* 2) Découvrir le tableau de bord */}
       <section className="bg-gray-100 dark:bg-gray-800 py-16 px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Découvrez votre futur tableau de bord
@@ -55,7 +36,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 3) Section visuelle #2 : Collaborez en temps réel */}
+      {/* 3) Section visuelle #2 */}
       <section className="bg-white dark:bg-gray-900 py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div className="relative h-72 md:h-80">
