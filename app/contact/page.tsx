@@ -22,7 +22,7 @@ export default function ContactPage() {
           <div>
             <h2 className="text-xl font-semibold mb-2">Téléphone & Email</h2>
             <p className="text-gray-700 dark:text-gray-300">
-              Téléphone : <span className="font-medium">(+221) 78 481 98 00</span><br />
+              Téléphone : <span className="font-medium">(+221) 78 481 98 00 (WhatsApp)</span><br />
               Email : <a className="text-blue-500 hover:underline" href="mailto:contact@chantiersync.com">contact@chantiersync.com</a>
             </p>
           </div>

@@ -39,13 +39,14 @@ export default function AffiliateForm() {
       await res.json();
       setFlash({
         type: "success",
-        message: "Votre demande d'affiliation a bien été envoyée. Vous recevrez vos identifiants après validation.",
+        message:
+          "Votre demande de partenariat a bien été envoyée. Vous recevrez vos identifiants d’accès à l’Espace Partenaires après validation par notre équipe.",
       });
       setFormData({ name: "", email: "", company: "", phone: "" });
     } catch (err) {
       setFlash({
         type: "error",
-        message: "Une erreur est survenue lors de l'envoi de votre demande.",
+        message: "Une erreur est survenue lors de l’envoi de votre demande.",
       });
     } finally {
       setLoading(false);
@@ -67,7 +68,7 @@ export default function AffiliateForm() {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Adresse email"
           value={formData.email}
           onChange={handleChange}
           className="w-full p-2 border rounded"
@@ -75,14 +76,14 @@ export default function AffiliateForm() {
         />
         <input
           name="company"
-          placeholder="Entreprise"
+          placeholder="Entreprise (facultatif)"
           value={formData.company}
           onChange={handleChange}
           className="w-full p-2 border rounded"
         />
         <input
           name="phone"
-          placeholder="Téléphone"
+          placeholder="Téléphone (facultatif)"
           value={formData.phone}
           onChange={handleChange}
           className="w-full p-2 border rounded"
@@ -92,7 +93,7 @@ export default function AffiliateForm() {
           disabled={loading}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
-          {loading ? "Envoi en cours..." : "Demander l'accès partenaire"}
+          {loading ? "Envoi en cours..." : "Demander un partenariat"}
         </button>
       </form>
     </div>

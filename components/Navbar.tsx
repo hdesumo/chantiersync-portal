@@ -1,18 +1,45 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+const Navbar = () => {
+  const pathname = usePathname();
+
   return (
-    <header className="bg-white dark:bg-gray-800 shadow">
-      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-        <Link href="/" className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-          ChantierSync
+    <nav className="flex justify-between items-center py-4 px-8 bg-gray-900 text-white">
+      {/* Logo */}
+      <Link href="/" className="text-xl font-bold">
+        <span className="text-blue-400">CHANTIERSYNC</span>
+      </Link>
+
+      {/* Liens */}
+      <div className="flex space-x-6">
+        <Link href="/" className={pathname === "/" ? "font-bold text-blue-400" : ""}>
+          Accueil
         </Link>
-        <nav className="space-x-6">
-          <Link href="/features">Fonctionnalités</Link>
-          <Link href="/pricing">Tarifs</Link>
-          <Link href="/contact">Contact</Link>
-        </nav>
+        <Link href="/fonctionnalites" className={pathname === "/fonctionnalites" ? "font-bold text-blue-400" : ""}>
+          Fonctionnalités
+        </Link>
+        <Link href="/tarifs" className={pathname === "/tarifs" ? "font-bold text-blue-400" : ""}>
+          Tarifs
+        </Link>
+        <Link href="/affiliation" className={pathname === "/affiliation" ? "font-bold text-blue-400" : ""}>
+          Programme Partenaires
+        </Link>
+        <Link href="/faq" className={pathname === "/faq" ? "font-bold text-blue-400" : ""}>
+          FAQ
+        </Link>
       </div>
-    </header>
+
+      {/* CTA */}
+      <Link
+        href="/essai"
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+      >
+        15 jours d’essai gratuit
+      </Link>
+    </nav>
   );
-}
+};
+
+export default Navbar;
