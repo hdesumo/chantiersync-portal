@@ -148,16 +148,16 @@ export default function Header() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between p-4 border-b dark:border-gray-800">
-                <Link href="/" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-                  <Image
-                    src="/logo.png"
-                    alt="Logo"
-                    width={120}
-                    height={120}
-                    priority
-                    className="rounded object-contain"
-                  />
-                </Link>
+                <Link href="/" className="flex items-center justify-center">
+                <Image
+                  src="/logo.png"   // ou "/logo.svg"
+                  alt="Logo"
+                  width={120}
+                  height={120}
+                  priority
+                  className="object-contain"
+                />
+              </Link>
                 <button
                   className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setIsOpen(false)}
