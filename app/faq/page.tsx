@@ -1,10 +1,5 @@
-import FAQContent from "@/components/FAQContent";
-
-export const metadata = {
-  title: "FAQ – ChantierSync",
-  description: "Questions fréquentes sur ChantierSync",
-};
+import FAQ from "@/components/FAQ";
 
 export default function FAQPage() {
-  return <FAQContent />;
+  return <FAQ />;
 }
