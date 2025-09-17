@@ -1,142 +1,68 @@
 "use client";
 import { useEffect, useState } from "react";
 
-// Récupération des taux depuis une API externe
-async function getRates(base: string = "EUR") {
-  const res = await fetch(`https://open.er-api.com/v6/latest/${base}`);
-  if (!res.ok) throw new Error("Impossible de récupérer les taux de change");
-  return res.json();
-}
+// Fallback local (base EUR → autres devises)
+const fallbackRates: Record<string, number> = {
+  EUR: 1,
+  USD: 1.1,
+  XOF: 655.96,
+  XAF: 655.96,
+};
 
-const currencies = ["EUR", "USD", "XOF", "XAF"];
+const basePrice = 25; // prix en EUR / mois
 
-export default function PricingPage() {
-  const [rates, setRates] = useState<{ [key: string]: number }>({});
-  const [currency, setCurrency] = useState("EUR");
+export default function TarifsPage() {
+  const [rates, setRates] = useState<Record<string, number>>(fallbackRates);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadRates() {
+    const fetchRates = async () => {
       try {
-        const data = await getRates("EUR");
-        const fetchedRates = data.rates || {};
-
-        // Ajout manuel de XOF et XAF si absents
-        // (1 EUR ≈ 655.957 XOF et XAF)
-        if (!fetchedRates["XOF"]) fetchedRates["XOF"] = 655.957;
-        if (!fetchedRates["XAF"]) fetchedRates["XAF"] = 655.957;
-
-        setRates(fetchedRates);
+        const res = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD,XOF,XAF");
+        if (!res.ok) throw new Error("API non disponible");
+        const data = await res.json();
+        if (data && data.rates) {
+          setRates({ EUR: 1, ...data.rates });
+        }
       } catch (err) {
-        console.error("Erreur de conversion:", err);
+        console.warn("⚠️ API indisponible, utilisation des fallback rates", err);
+        setRates(fallbackRates);
+      } finally {
+        setLoading(false);
       }
-    }
-    loadRates();
+    };
+
+    fetchRates();
   }, []);
 
-  // Prix de base en EUR
-  const baseMonthly = 25;
-  const baseSemester = baseMonthly * 6 * 0.85; // -15%
-  const baseAnnual = baseMonthly * 12 * 0.75; // -25%
-
-  function format(price: number) {
-    if (currency === "EUR") return `${price.toFixed(2)} €`;
-    if (currency === "USD") return `$${(price * (rates["USD"] || 1)).toFixed(2)}`;
-    if (currency === "XOF") return `${(price * (rates["XOF"] || 655.957)).toFixed(0)} F CFA`;
-    if (currency === "XAF") return `${(price * (rates["XAF"] || 655.957)).toFixed(0)} F CFA`;
-    return price.toFixed(2);
-  }
+  const computePrice = (currency: string, months: number) => {
+    const discount = months === 6 ? 0.85 : months === 12 ? 0.75 : 1;
+    const monthlyPrice = basePrice * (rates[currency] || fallbackRates[currency]) * discount;
+    return monthlyPrice.toFixed(2);
+  };
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-10">
-          Nos Tarifs
-        </h1>
-
-        {/* Sélecteur */}
-        <div className="mb-8">
-          <label htmlFor="currency" className="mr-2 font-medium">
-            Devise :
-          </label>
-          <select
-            id="currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            className="border rounded p-2"
-          >
-            {currencies.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid md:grid-cols-4 gap-6">
-          {/* Essai */}
-          <div className="bg-white shadow-md rounded-lg p-6 border">
-            <h3 className="text-xl font-bold mb-2">Essai gratuit</h3>
-            <p className="text-3xl font-extrabold text-green-600 mb-4">
-              Gratuit
-            </p>
-            <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Accès complet</li>
-              <li>Support email</li>
+    <div className="max-w-4xl mx-auto py-16 px-6">
+      <h1 className="text-3xl font-bold text-center mb-8">Nos Tarifs</h1>
+      {loading && <p className="text-center text-gray-500">Chargement des taux de change...</p>}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {["EUR", "USD", "XOF", "XAF"].map((currency) => (
+          <div key={currency} className="border rounded-xl shadow p-6 text-center">
+            <h2 className="text-xl font-semibold mb-4">Devise : {currency}</h2>
+            <ul className="space-y-3">
+              <li>
+                <strong>Mensuel :</strong> {computePrice(currency, 1)} {currency}
+              </li>
+              <li>
+                <strong>Semestriel (-15%) :</strong> {computePrice(currency, 6)} {currency}
+              </li>
+              <li>
+                <strong>Annuel (-25%) :</strong> {computePrice(currency, 12)} {currency}
+              </li>
             </ul>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              Commencer l’essai
-            </button>
           </div>
-
-          {/* Mensuel */}
-          <div className="bg-white shadow-md rounded-lg p-6 border">
-            <h3 className="text-xl font-bold mb-2">Mensuel</h3>
-            <p className="text-3xl font-extrabold text-green-600 mb-4">
-              {format(baseMonthly)} /mois
-            </p>
-            <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Tous les modules</li>
-              <li>Mises à jour</li>
-              <li>Support standard</li>
-            </ul>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              S’abonner
-            </button>
-          </div>
-
-          {/* Semestre */}
-          <div className="bg-white shadow-md rounded-lg p-6 border">
-            <h3 className="text-xl font-bold mb-2">Semestriel</h3>
-            <p className="text-3xl font-extrabold text-green-600 mb-4">
-              {format(baseSemester)} /6 mois
-            </p>
-            <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Réduction 15%</li>
-              <li>Tous les modules</li>
-              <li>Support prioritaire</li>
-            </ul>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              S’abonner
-            </button>
-          </div>
-
-          {/* Annuel */}
-          <div className="bg-white shadow-md rounded-lg p-6 border">
-            <h3 className="text-xl font-bold mb-2">Annuel</h3>
-            <p className="text-3xl font-extrabold text-green-600 mb-4">
-              {format(baseAnnual)} /an
-            </p>
-            <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Réduction 25%</li>
-              <li>Tous les modules</li>
-              <li>Support prioritaire</li>
-            </ul>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              S’abonner
-            </button>
-          </div>
-        </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
