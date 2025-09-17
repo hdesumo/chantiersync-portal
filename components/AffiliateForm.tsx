@@ -4,52 +4,58 @@ import { useState } from "react";
 import AffiliateFlashMessage from "./AffiliateFlashMessage";
 
 export default function AffiliateForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    phone: "",
-  });
-
   const [flash, setFlash] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setFlash(null);
+
+    const form = e.currentTarget;
+    const formData = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      company: (form.elements.namedItem("company") as HTMLInputElement).value,
+      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
+    };
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/affiliates`, {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/affiliates`;
+      console.log("🔍 [DEBUG] URL appelée par AffiliateForm:", url);
+      console.log("🔍 [DEBUG] Données envoyées:", formData);
+
+      const res = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (!res.ok) {
-        throw new Error("Erreur lors de l'envoi");
+        const errorText = await res.text();
+        console.error("❌ [DEBUG] Erreur API:", res.status, errorText);
+        setFlash({
+          type: "error",
+          message: `Erreur API (${res.status}) : ${errorText}`,
+        });
+        return;
       }
 
-      await res.json();
+      const data = await res.json();
+      console.log("✅ [DEBUG] Réponse API:", data);
+
       setFlash({
         type: "success",
         message:
-          "Votre demande de partenariat a bien été envoyée. Vous recevrez vos identifiants d’accès à l’Espace Partenaires après validation par notre équipe.",
+          "Votre demande de partenariat a bien été enregistrée. Vous serez recontacté par notre équipe.",
       });
-      setFormData({ name: "", email: "", company: "", phone: "" });
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
     } catch (err) {
+      console.error("❌ [DEBUG] Exception dans handleSubmit:", err);
       setFlash({
         type: "error",
         message: "Une erreur est survenue lors de l’envoi de votre demande.",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -59,41 +65,35 @@ export default function AffiliateForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="name"
+          type="text"
           placeholder="Nom complet"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
           required
+          className="w-full p-2 border rounded"
         />
         <input
-          type="email"
           name="email"
-          placeholder="Adresse email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
+          type="email"
+          placeholder="Email"
           required
+          className="w-full p-2 border rounded"
         />
         <input
           name="company"
-          placeholder="Entreprise (facultatif)"
-          value={formData.company}
-          onChange={handleChange}
+          type="text"
+          placeholder="Entreprise"
           className="w-full p-2 border rounded"
         />
         <input
           name="phone"
-          placeholder="Téléphone (facultatif)"
-          value={formData.phone}
-          onChange={handleChange}
+          type="text"
+          placeholder="Téléphone"
           className="w-full p-2 border rounded"
         />
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
         >
-          {loading ? "Envoi en cours..." : "Demander un partenariat"}
+          Envoyer la demande
         </button>
       </form>
     </div>
