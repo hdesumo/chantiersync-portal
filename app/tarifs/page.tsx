@@ -1,67 +1,146 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
-// Fallback local (base EUR → autres devises)
-const fallbackRates: Record<string, number> = {
-  EUR: 1,
-  USD: 1.1,
-  XOF: 655.96,
-  XAF: 655.96,
-};
+type Currency = "EUR" | "USD" | "XOF" | "XAF";
 
-const basePrice = 25; // prix en EUR / mois
+interface Prices {
+  monthly: number;
+  semiAnnual: number;
+  annual: number;
+}
+
+const basePriceEUR = 25; // prix de base en EUR
 
 export default function TarifsPage() {
-  const [rates, setRates] = useState<Record<string, number>>(fallbackRates);
-  const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState<Currency>("EUR");
+  const [rates, setRates] = useState<Record<string, number>>({});
+  const [prices, setPrices] = useState<Prices>({
+    monthly: basePriceEUR,
+    semiAnnual: basePriceEUR * 6 * 0.85, // -15% pour 6 mois
+    annual: basePriceEUR * 12 * 0.75, // -25% pour 12 mois
+  });
 
+  // Récupérer les taux de conversion
   useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const res = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD,XOF,XAF");
-        if (!res.ok) throw new Error("API non disponible");
-        const data = await res.json();
+    fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD,XOF,XAF")
+      .then((res) => res.json())
+      .then((data) => {
         if (data && data.rates) {
-          setRates({ EUR: 1, ...data.rates });
+          setRates(data.rates);
         }
-      } catch (err) {
-        console.warn("⚠️ API indisponible, utilisation des fallback rates", err);
-        setRates(fallbackRates);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRates();
+      })
+      .catch((err) => console.error("Erreur récupération taux:", err));
   }, []);
 
-  const computePrice = (currency: string, months: number) => {
-    const discount = months === 6 ? 0.85 : months === 12 ? 0.75 : 1;
-    const monthlyPrice = basePrice * (rates[currency] || fallbackRates[currency]) * discount;
-    return monthlyPrice.toFixed(2);
-  };
+  // Recalcul des prix à chaque changement de devise
+  useEffect(() => {
+    let rate = 1; // par défaut EUR
+    if (currency !== "EUR" && rates[currency]) {
+      rate = rates[currency];
+    }
+
+    setPrices({
+      monthly: basePriceEUR * rate,
+      semiAnnual: basePriceEUR * 6 * 0.85 * rate,
+      annual: basePriceEUR * 12 * 0.75 * rate,
+    });
+  }, [currency, rates]);
 
   return (
-    <div className="max-w-4xl mx-auto py-16 px-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Nos Tarifs</h1>
-      {loading && <p className="text-center text-gray-500">Chargement des taux de change...</p>}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {["EUR", "USD", "XOF", "XAF"].map((currency) => (
-          <div key={currency} className="border rounded-xl shadow p-6 text-center">
-            <h2 className="text-xl font-semibold mb-4">Devise : {currency}</h2>
-            <ul className="space-y-3">
-              <li>
-                <strong>Mensuel :</strong> {computePrice(currency, 1)} {currency}
-              </li>
-              <li>
-                <strong>Semestriel (-15%) :</strong> {computePrice(currency, 6)} {currency}
-              </li>
-              <li>
-                <strong>Annuel (-25%) :</strong> {computePrice(currency, 12)} {currency}
-              </li>
-            </ul>
-          </div>
-        ))}
+    <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Nos Tarifs</h1>
+
+        {/* Sélecteur de devise */}
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as Currency)}
+          className="border border-gray-300 rounded px-3 py-2"
+        >
+          <option value="EUR">EUR (€)</option>
+          <option value="USD">USD ($)</option>
+          <option value="XOF">XOF (CFA BCEAO)</option>
+          <option value="XAF">XAF (CFA BEAC)</option>
+        </select>
+      </div>
+
+      {/* Grille des tarifs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Gratuit */}
+        <div className="border rounded-lg p-6 shadow text-center">
+          <h2 className="text-xl font-bold mb-2">Essai gratuit</h2>
+          <p className="text-2xl font-bold mb-4">Gratuit</p>
+          <ul className="mb-6 space-y-2">
+            <li>Accès complet</li>
+            <li>Support email</li>
+          </ul>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            Commencer l’essai
+          </button>
+        </div>
+
+        {/* Mensuel */}
+        <div className="border rounded-lg p-6 shadow text-center">
+          <h2 className="text-xl font-bold mb-2">Mensuel</h2>
+          <p className="text-2xl font-bold mb-4">
+            {prices.monthly.toFixed(2)} {currency} / mois
+          </p>
+          <ul className="mb-6 space-y-2">
+            <li>Tous les modules</li>
+            <li>Mises à jour</li>
+            <li>Support standard</li>
+          </ul>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            S’abonner
+          </button>
+        </div>
+
+        {/* Semestriel */}
+        <div className="border rounded-lg p-6 shadow text-center">
+          <h2 className="text-xl font-bold mb-2">Semestriel</h2>
+          <p className="text-2xl font-bold mb-4">
+            {prices.semiAnnual.toFixed(2)} {currency} / 6 mois
+          </p>
+          <ul className="mb-6 space-y-2">
+            <li>Réduction 15%</li>
+            <li>Tous les modules</li>
+            <li>Support prioritaire</li>
+          </ul>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            S’abonner
+          </button>
+        </div>
+
+        {/* Annuel */}
+        <div className="border rounded-lg p-6 shadow text-center">
+          <h2 className="text-xl font-bold mb-2">Annuel</h2>
+          <p className="text-2xl font-bold mb-4">
+            {prices.annual.toFixed(2)} {currency} / an
+          </p>
+          <ul className="mb-6 space-y-2">
+            <li>Réduction 25%</li>
+            <li>Tous les modules</li>
+            <li>Support prioritaire</li>
+          </ul>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            S’abonner
+          </button>
+        </div>
+      </div>
+
+      {/* Bloc entreprise */}
+      <div className="mt-8 border rounded-lg p-6 shadow text-center">
+        <h2 className="text-xl font-bold mb-2">Entreprise</h2>
+        <p className="text-2xl font-bold mb-4">Sur devis</p>
+        <ul className="mb-6 space-y-2">
+          <li>SLA dédié</li>
+          <li>SSO & conformité</li>
+          <li>Intégrations personnalisées</li>
+        </ul>
+        <button className="bg-gray-600 text-white px-4 py-2 rounded">
+          Nous contacter
+        </button>
       </div>
     </div>
   );
