@@ -16,7 +16,7 @@ export default function Header() {
     { href: "/", label: "Accueil" },
     { href: "/fonctionnalites", label: "Fonctionnalités" },
     { href: "/tarifs", label: "Tarifs" },
-    { href: "/affiliation", label: "Affiliation" },
+    { href: "/partenariat", label: "Programme Partenaires" },
     { href: "/faq", label: "FAQ" },
   ];
 
@@ -24,7 +24,6 @@ export default function Header() {
     "inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-sm font-medium text-white shadow hover:bg-primary-light transition-colors";
 
   useEffect(() => {
-    // Gestion du thème
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme === "dark" || storedTheme === "light") {
       setTheme(storedTheme);
@@ -34,8 +33,6 @@ export default function Header() {
       setTheme(prefersDark ? "dark" : "light");
       document.documentElement.classList.toggle("dark", prefersDark);
     }
-
-    // Vérifier la session
     setIsLoggedIn(!!getSession());
   }, []);
 
@@ -79,20 +76,13 @@ export default function Header() {
             </Link>
           ))}
 
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <button
               onClick={handleLogout}
               className="text-red-600 font-semibold"
             >
               Déconnexion
             </button>
-          ) : (
-            <Link
-              href="/connexion"
-              className="text-blue-600 font-semibold"
-            >
-              Connexion
-            </Link>
           )}
 
           <button
@@ -149,15 +139,15 @@ export default function Header() {
             >
               <div className="flex items-center justify-between p-4 border-b dark:border-gray-800">
                 <Link href="/" className="flex items-center justify-center">
-                <Image
-                  src="/logo.png"   // ou "/logo.svg"
-                  alt="Logo"
-                  width={120}
-                  height={120}
-                  priority
-                  className="object-contain"
-                />
-              </Link>
+                  <Image
+                    src="/logo.png"
+                    alt="Logo"
+                    width={120}
+                    height={120}
+                    priority
+                    className="object-contain"
+                  />
+                </Link>
                 <button
                   className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setIsOpen(false)}
@@ -187,7 +177,7 @@ export default function Header() {
                   15 jours d’essai gratuit
                 </Link>
 
-                {isLoggedIn ? (
+                {isLoggedIn && (
                   <button
                     onClick={() => {
                       handleLogout();
@@ -197,14 +187,6 @@ export default function Header() {
                   >
                     Déconnexion
                   </button>
-                ) : (
-                  <Link
-                    href="/connexion"
-                    onClick={() => setIsOpen(false)}
-                    className="text-blue-600 font-semibold"
-                  >
-                    Connexion
-                  </Link>
                 )}
 
                 <button
