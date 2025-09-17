@@ -28,7 +28,7 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-2">Programme</h3>
           <ul className="space-y-1">
-            <li><Link href="/affiliation">Programme Partenaires</Link></li>
+            <li><Link href="/partenariat">Programme Partenaires</Link></li>
           </ul>
         </div>
 

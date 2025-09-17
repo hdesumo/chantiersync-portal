@@ -23,7 +23,7 @@ const Navbar = () => {
         <Link href="/tarifs" className={pathname === "/tarifs" ? "font-bold text-blue-400" : ""}>
           Tarifs
         </Link>
-        <Link href="/affiliation" className={pathname === "/affiliation" ? "font-bold text-blue-400" : ""}>
+        <Link href="/partenariat" className={pathname === "/partenariat" ? "font-bold text-blue-400" : ""}>
           Programme Partenaires
         </Link>
         <Link href="/faq" className={pathname === "/faq" ? "font-bold text-blue-400" : ""}>
