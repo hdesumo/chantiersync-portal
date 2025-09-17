@@ -1,153 +1,113 @@
+// app/tarifs/page.tsx
 "use client";
+import { useState } from "react";
 
-import { useEffect, useState } from "react";
+const rates = {
+  EUR: 1,
+  USD: 1.08,
+  XOF: 655.96,
+  XAF: 655.96,
+  GBP: 0.85,
+};
 
-type Currency = "EUR" | "USD" | "XOF" | "XAF";
-
-interface Prices {
-  monthly: number;
-  semiAnnual: number;
-  annual: number;
-}
-
-const basePriceEUR = 25; // prix de base en EUR
+const formatPrice = (base: number, currency: string) => {
+  const price = base * (rates as any)[currency];
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 export default function TarifsPage() {
-  const [currency, setCurrency] = useState<Currency>("EUR");
-  const [rates, setRates] = useState<Record<string, number>>({});
-  const [prices, setPrices] = useState<Prices | null>(null);
+  const [currency, setCurrency] = useState("EUR");
 
-  // Récupérer les taux de conversion
-  useEffect(() => {
-    fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD,XOF,XAF")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.rates) {
-          setRates(data.rates);
-        }
-      })
-      .catch((err) => console.error("Erreur récupération taux:", err));
-  }, []);
-
-  // Recalcul des prix quand la devise change ou quand les taux arrivent
-  useEffect(() => {
-    let rate = 1;
-    if (currency !== "EUR" && rates[currency]) {
-      rate = rates[currency];
-    }
-
-    setPrices({
-      monthly: basePriceEUR * rate,
-      semiAnnual: basePriceEUR * 6 * 0.85 * rate, // -15% pour 6 mois
-      annual: basePriceEUR * 12 * 0.75 * rate, // -25% pour 12 mois
-    });
-  }, [currency, rates]);
-
-  // Helper pour formater les prix selon la devise
-  const formatPrice = (value: number, curr: Currency) => {
-    if (curr === "XOF" || curr === "XAF") {
-      return `${Math.round(value)} ${curr}`;
-    }
-    return `${value.toFixed(2)} ${curr}`;
-  };
+  const plans = [
+    {
+      title: "Mensuel",
+      base: 25,
+      desc: "Facturation chaque mois.",
+      cta: "Commencer l’essai",
+      link: "/essai-gratuit",
+    },
+    {
+      title: "Semestriel",
+      base: 25 * 6 * 0.85,
+      desc: "15% de réduction sur 6 mois.",
+      cta: "S’abonner",
+      link: "/abonnement",
+    },
+    {
+      title: "Annuel",
+      base: 25 * 12 * 0.75,
+      desc: "25% de réduction sur 12 mois.",
+      cta: "S’abonner",
+      link: "/abonnement",
+    },
+    {
+      title: "Entreprise",
+      base: 0,
+      desc: "Solutions sur mesure pour votre société.",
+      cta: "Nous contacter",
+      link: "/contact",
+    },
+  ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Nos Tarifs</h1>
-
-        {/* Sélecteur de devise */}
+    <div className="max-w-6xl mx-auto px-4 py-12">
+      {/* Titre + Sélecteur devise */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
+        <h1 className="text-3xl font-bold mb-4 sm:mb-0">Nos Tarifs</h1>
         <select
           value={currency}
-          onChange={(e) => setCurrency(e.target.value as Currency)}
-          className="border border-gray-300 rounded px-3 py-2"
+          onChange={(e) => setCurrency(e.target.value)}
+          className="border px-3 py-2 rounded-md text-sm"
         >
-          <option value="EUR">EUR (€)</option>
-          <option value="USD">USD ($)</option>
-          <option value="XOF">XOF (CFA BCEAO)</option>
-          <option value="XAF">XAF (CFA BEAC)</option>
+          {Object.keys(rates).map((cur) => (
+            <option key={cur} value={cur}>
+              {cur}
+            </option>
+          ))}
         </select>
       </div>
 
-      {!prices ? (
-        <p className="text-center">Chargement des tarifs...</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Gratuit */}
-          <div className="border rounded-lg p-6 shadow text-center">
-            <h2 className="text-xl font-bold mb-2">Essai gratuit</h2>
-            <p className="text-2xl font-bold mb-4">Gratuit</p>
-            <ul className="mb-6 space-y-2">
-              <li>Accès complet</li>
-              <li>Support email</li>
-            </ul>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Commencer l’essai
-            </button>
-          </div>
+      {/* Grille responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {plans.map((plan) => (
+          <div
+            key={plan.title}
+            className="border rounded-2xl shadow-md p-6 flex flex-col justify-between hover:shadow-lg transition"
+          >
+            <div>
+              <h2 className="text-xl font-semibold mb-2">{plan.title}</h2>
+              <p className="text-gray-600 mb-4">{plan.desc}</p>
+              {plan.base > 0 ? (
+                <p className="text-3xl font-bold text-blue-600 mb-4">
+                  {formatPrice(plan.base, currency)}
+                  <span className="text-base font-normal text-gray-500">
+                    {" "}
+                    / {plan.title === "Mensuel"
+                      ? "mois"
+                      : plan.title === "Semestriel"
+                      ? "6 mois"
+                      : "an"}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-2xl font-semibold text-green-600 mb-4">
+                  Sur devis
+                </p>
+              )}
+            </div>
 
-          {/* Mensuel */}
-          <div className="border rounded-lg p-6 shadow text-center">
-            <h2 className="text-xl font-bold mb-2">Mensuel</h2>
-            <p className="text-2xl font-bold mb-4">
-              {formatPrice(prices.monthly, currency)} / mois
-            </p>
-            <ul className="mb-6 space-y-2">
-              <li>Tous les modules</li>
-              <li>Mises à jour</li>
-              <li>Support standard</li>
-            </ul>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              S’abonner
-            </button>
+            <a
+              href={plan.link}
+              className="block mt-4 w-full text-center bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition"
+            >
+              {plan.cta}
+            </a>
           </div>
-
-          {/* Semestriel */}
-          <div className="border rounded-lg p-6 shadow text-center">
-            <h2 className="text-xl font-bold mb-2">Semestriel</h2>
-            <p className="text-2xl font-bold mb-4">
-              {formatPrice(prices.semiAnnual, currency)} / 6 mois
-            </p>
-            <ul className="mb-6 space-y-2">
-              <li>Réduction 15%</li>
-              <li>Tous les modules</li>
-              <li>Support prioritaire</li>
-            </ul>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              S’abonner
-            </button>
-          </div>
-
-          {/* Annuel */}
-          <div className="border rounded-lg p-6 shadow text-center">
-            <h2 className="text-xl font-bold mb-2">Annuel</h2>
-            <p className="text-2xl font-bold mb-4">
-              {formatPrice(prices.annual, currency)} / an
-            </p>
-            <ul className="mb-6 space-y-2">
-              <li>Réduction 25%</li>
-              <li>Tous les modules</li>
-              <li>Support prioritaire</li>
-            </ul>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              S’abonner
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Bloc entreprise */}
-      <div className="mt-8 border rounded-lg p-6 shadow text-center">
-        <h2 className="text-xl font-bold mb-2">Entreprise</h2>
-        <p className="text-2xl font-bold mb-4">Sur devis</p>
-        <ul className="mb-6 space-y-2">
-          <li>SLA dédié</li>
-          <li>SSO & conformité</li>
-          <li>Intégrations personnalisées</li>
-        </ul>
-        <button className="bg-gray-600 text-white px-4 py-2 rounded">
-          Nous contacter
-        </button>
+        ))}
       </div>
     </div>
   );
