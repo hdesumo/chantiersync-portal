@@ -120,8 +120,8 @@ export default function HomePage() {
               Donnez aux chefs de chantier des outils simples pour remonter des
               preuves et débloquer rapidement les décisions.
             </p>
-            <Link href="/affiliation" className={outline}>
-              Devenir partenaire / affilié
+            <Link href="/partenariat" className={outline}>
+              Rejoignez notre programme Partenaires
             </Link>
           </div>
         </div>
