@@ -29,6 +29,9 @@ const Navbar = () => {
         <Link href="/faq" className={pathname === "/faq" ? "font-bold text-blue-400" : ""}>
           FAQ
         </Link>
+        <Link href="/abonnement" className={pathname === "/abonnement" ? "font-bold text-blue-400" : ""}>
+          S’abonner
+        </Link>
       </div>
 
       {/* CTA */}

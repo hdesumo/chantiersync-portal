@@ -1,4 +1,3 @@
-// app/tarifs/page.tsx
 "use client";
 import { useState } from "react";
 
@@ -27,8 +26,8 @@ export default function TarifsPage() {
       title: "Mensuel",
       base: 25,
       desc: "Facturation chaque mois.",
-      cta: "Commencer l’essai",
-      link: "/essai-gratuit",
+      cta: "S’abonner",
+      link: "/abonnement",
     },
     {
       title: "Semestriel",
